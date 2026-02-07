@@ -1,13 +1,19 @@
--- V9: Add hotel owner role
--- This migration adds HOTEL_OWNER to the role enum in users table
--- Note: This migration was already applied to the database
+-- V9: Add hotel owner role and hotel_id column
+-- This migration adds HOTEL_OWNER to the role enum and hotel_id to users table
 
--- The ALTER TABLE to modify the role enum was executed previously
--- ALTER TABLE users MODIFY COLUMN role ENUM('USER', 'ADMIN', 'HOTEL_OWNER') NOT NULL DEFAULT 'USER';
+-- Add hotel_id column to users if it doesn't exist
+DROP PROCEDURE IF EXISTS add_hotel_owner_columns;
+DELIMITER //
+CREATE PROCEDURE add_hotel_owner_columns()
+BEGIN
+    -- Add hotel_id to users if it doesn't exist
+    IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'hotel_id') THEN
+        ALTER TABLE users ADD COLUMN hotel_id BIGINT NULL;
+    END IF;
+END //
+DELIMITER ;
 
--- Also added hotel_id foreign key for hotel owners
--- ALTER TABLE users ADD COLUMN hotel_id BIGINT NULL;
--- ALTER TABLE users ADD CONSTRAINT fk_users_hotel FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE SET NULL;
+CALL add_hotel_owner_columns();
+DROP PROCEDURE IF EXISTS add_hotel_owner_columns;
 
--- This file exists as a placeholder to match the flyway_schema_history record
-SELECT 1;
+-- Note: ENUM modification handled by JPA/Hibernate
