@@ -1,0 +1,95 @@
+# =====================================================
+# PRODUCTION CONFIGURATION
+# =====================================================
+# This file contains production-specific overrides.
+# Activate with: --spring.profiles.active=prod
+
+server:
+  port: ${PORT:8080}
+  error:
+    # SECURITY: Never expose stack traces or binding errors in production
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+spring:
+  # ==================== DATABASE ====================
+  datasource:
+    # REQUIRED: Set these via environment variables
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      pool-name: HotelHikariPool-Prod
+      maximum-pool-size: ${DB_POOL_MAX:20}
+      minimum-idle: ${DB_POOL_MIN:5}
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+
+  jpa:
+    hibernate:
+      # CRITICAL: Never auto-update schema in production
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  # ==================== EMAIL ====================
+  mail:
+    enabled: ${MAIL_ENABLED:true}
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+
+# ==================== APPLICATION ====================
+app:
+  name: LuxeStay
+  url: ${APP_URL}
+
+# ==================== JWT ====================
+jwt:
+  # REQUIRED: Set a strong secret via environment variable
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+# ==================== CORS ====================
+cors:
+  # REQUIRED: Set production domains
+  allowed-origins: ${CORS_ORIGINS}
+  allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# ==================== LOGGING ====================
+logging:
+  level:
+    root: WARN
+    com.hotel: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# ==================== SWAGGER ====================
+springdoc:
+  # Disable Swagger UI in production
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
