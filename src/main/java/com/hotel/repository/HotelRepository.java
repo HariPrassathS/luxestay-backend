@@ -18,6 +18,11 @@ import java.util.Optional;
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     /**
+     * Check if a hotel exists in a city (for seeding).
+     */
+    boolean existsByCity(String city);
+
+    /**
      * Find all active hotels.
      */
     List<Hotel> findByIsActiveTrue();

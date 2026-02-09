@@ -20,6 +20,7 @@ import com.hotel.domain.entity.User;
 import com.hotel.service.BookingService;
 import com.hotel.service.DestinationService;
 import com.hotel.service.HotelOwnerService;
+import com.hotel.service.HotelSeedService;
 import com.hotel.service.HotelService;
 import com.hotel.service.ReviewService;
 import com.hotel.service.RoomService;
@@ -56,6 +57,7 @@ public class AdminController {
     private final HotelOwnerService hotelOwnerService;
     private final ReviewService reviewService;
     private final DestinationService destinationService;
+    private final HotelSeedService hotelSeedService;
 
     public AdminController(HotelService hotelService, 
                            RoomService roomService, 
@@ -63,7 +65,8 @@ public class AdminController {
                            UserService userService,
                            HotelOwnerService hotelOwnerService,
                            ReviewService reviewService,
-                           DestinationService destinationService) {
+                           DestinationService destinationService,
+                           HotelSeedService hotelSeedService) {
         this.hotelService = hotelService;
         this.roomService = roomService;
         this.bookingService = bookingService;
@@ -71,6 +74,7 @@ public class AdminController {
         this.hotelOwnerService = hotelOwnerService;
         this.reviewService = reviewService;
         this.destinationService = destinationService;
+        this.hotelSeedService = hotelSeedService;
     }
 
     // ==================== Dashboard Stats ====================
@@ -604,5 +608,24 @@ public class AdminController {
         destinationService.seedDefaultDestinations();
         List<DestinationDto> destinations = destinationService.getAllDestinations();
         return ResponseEntity.ok(ApiResponse.success("Destinations seeded successfully", destinations));
+    }
+
+    // ==================== Hotel Seeding ====================
+
+    /**
+     * Seed hotels for missing cities (Las Vegas, Los Angeles, London, Barcelona).
+     * Each city gets 1 hotel with 4 rooms.
+     */
+    @PostMapping("/hotels/seed-cities")
+    @Operation(summary = "Seed hotels for cities", description = "Seed hotels for Las Vegas, Los Angeles, London, and Barcelona destinations")
+    public ResponseEntity<ApiResponse<String>> seedCityHotels() {
+        var seededHotels = hotelSeedService.seedMissingCityHotels();
+        if (seededHotels.isEmpty()) {
+            return ResponseEntity.ok(ApiResponse.success("All cities already have hotels", "No new hotels added"));
+        }
+        String message = "Seeded " + seededHotels.size() + " hotel(s) with 4 rooms each: " + 
+                         seededHotels.stream().map(h -> h.getCity()).reduce((a, b) -> a + ", " + b).orElse("");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(message, message));
     }
 }
