@@ -32,7 +32,7 @@ public class HotelSeedService {
     }
 
     /**
-     * Seed hotels for Las Vegas, Los Angeles, London, and Barcelona.
+     * Seed hotels for Las Vegas, Los Angeles, London, Barcelona, and Dubai.
      * Each city gets 1 hotel with 4 rooms.
      */
     @Transactional
@@ -65,6 +65,13 @@ public class HotelSeedService {
             Hotel barcelona = seedBarcelonaHotel();
             seededHotels.add(barcelona);
             logger.info("Seeded Barcelona hotel: {}", barcelona.getName());
+        }
+        
+        // Seed Dubai hotel
+        if (!hotelRepository.existsByCity("Dubai")) {
+            Hotel dubai = seedDubaiHotel();
+            seededHotels.add(dubai);
+            logger.info("Seeded Dubai hotel: {}", dubai.getName());
         }
         
         return seededHotels;
@@ -263,6 +270,55 @@ public class HotelSeedService {
                 RoomType.PRESIDENTIAL, new BigDecimal("1899.00"), 4, "King + Sofa Bed", new BigDecimal("140"),
                 "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600",
                 "[\"Free WiFi\", \"Rooftop Terrace\", \"Private Pool\", \"360° Views\", \"Personal Butler\", \"Mercedes Service\"]");
+        
+        return hotel;
+    }
+
+    private Hotel seedDubaiHotel() {
+        Hotel hotel = Hotel.builder()
+                .name("Burj Al Arab View Resort")
+                .description("Experience Arabian luxury at Burj Al Arab View Resort. Stunning views of the iconic Burj Al Arab, private beach, world-class spa, and exceptional dining. The ultimate Dubai experience awaits.")
+                .address("Jumeirah Beach Road")
+                .city("Dubai")
+                .country("United Arab Emirates")
+                .postalCode("00000")
+                .phone("+971 4 301 7777")
+                .email("reservations@burjview.ae")
+                .starRating(5)
+                .heroImageUrl("https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200")
+                .amenities("[\"Free WiFi\", \"Private Beach\", \"Infinity Pool\", \"Desert Safari\", \"Gold Spa\", \"Butler Service\", \"Helicopter Tours\"]")
+                .checkInTime(LocalTime.of(14, 0))
+                .checkOutTime(LocalTime.of(12, 0))
+                .isActive(true)
+                .latitude(25.1412)
+                .longitude(55.1852)
+                .build();
+        
+        hotel = hotelRepository.save(hotel);
+        
+        createRoom(hotel, "DXB101", "Arabian Gulf View Room", 
+                "Elegant room with stunning Arabian Gulf and Burj Al Arab views", 
+                RoomType.DELUXE, new BigDecimal("450.00"), 2, "King", new BigDecimal("45"),
+                "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=600",
+                "[\"Free WiFi\", \"Sea View\", \"Marble Bathroom\", \"24-Hour Dining\", \"Beach Access\"]");
+        
+        createRoom(hotel, "DXB201", "Burj View Suite", 
+                "Luxury suite with iconic Burj Al Arab views and private pool", 
+                RoomType.SUITE, new BigDecimal("1200.00"), 2, "King", new BigDecimal("80"),
+                "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600",
+                "[\"Free WiFi\", \"Burj View\", \"Private Pool\", \"Butler Service\", \"Gold Amenities\", \"Spa Access\"]");
+        
+        createRoom(hotel, "DXB301", "Desert Family Suite", 
+                "Spacious family suite with desert safari and kids activities", 
+                RoomType.FAMILY, new BigDecimal("850.00"), 4, "2 Queens", new BigDecimal("90"),
+                "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600",
+                "[\"Free WiFi\", \"Desert View\", \"Kids Club\", \"Camel Rides\", \"Water Park Tickets\", \"Two Bathrooms\"]");
+        
+        createRoom(hotel, "DXB401", "Royal Beach Villa", 
+                "Private beachfront villa with infinity pool and helicopter access", 
+                RoomType.PRESIDENTIAL, new BigDecimal("5000.00"), 6, "2 Kings + Sofa Bed", new BigDecimal("250"),
+                "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600",
+                "[\"Free WiFi\", \"Private Beach\", \"Infinity Pool\", \"Personal Chef\", \"Yacht Access\", \"Helicopter Tours\", \"24-Hour Butler\"]");
         
         return hotel;
     }
