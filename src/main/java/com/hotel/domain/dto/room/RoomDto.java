@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,4 +33,7 @@ public class RoomDto {
     private String imageUrl;
     private List<String> amenities;
     private Boolean isAvailable;
+    
+    /** Timestamp of last update - used for cache-busting on frontend */
+    private LocalDateTime updatedAt;
 }

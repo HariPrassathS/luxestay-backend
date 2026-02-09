@@ -59,6 +59,7 @@ public class HotelMapper {
                 .minPrice(hotel.getMinPrice())
                 .availableRooms(hotel.getAvailableRoomCount())
                 .images(imageDtos)
+                .updatedAt(hotel.getUpdatedAt())
                 .build();
     }
 

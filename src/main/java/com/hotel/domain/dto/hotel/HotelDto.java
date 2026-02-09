@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -37,4 +38,7 @@ public class HotelDto {
     private Double minPrice;
     private Long availableRooms;
     private List<HotelImageDto> images;
+    
+    /** Timestamp of last update - used for cache-busting on frontend */
+    private LocalDateTime updatedAt;
 }

@@ -46,6 +46,7 @@ public class RoomMapper {
                 .imageUrl(room.getImageUrl())
                 .amenities(parseAmenities(room.getAmenities()))
                 .isAvailable(room.getIsAvailable())
+                .updatedAt(room.getUpdatedAt())
                 .build();
     }
 
