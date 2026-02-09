@@ -5,6 +5,8 @@ import com.hotel.domain.dto.booking.BookingDto;
 import com.hotel.domain.dto.booking.UpdateBookingStatusRequest;
 import com.hotel.domain.dto.common.ApiResponse;
 import com.hotel.domain.dto.common.PagedResponse;
+import com.hotel.domain.dto.destination.CreateDestinationRequest;
+import com.hotel.domain.dto.destination.DestinationDto;
 import com.hotel.domain.dto.hotel.CreateHotelRequest;
 import com.hotel.domain.dto.hotel.HotelDto;
 import com.hotel.domain.dto.owner.CreateHotelOwnerRequest;
@@ -16,6 +18,7 @@ import com.hotel.domain.dto.user.UpdateUserRoleRequest;
 import com.hotel.domain.dto.user.UserDto;
 import com.hotel.domain.entity.User;
 import com.hotel.service.BookingService;
+import com.hotel.service.DestinationService;
 import com.hotel.service.HotelOwnerService;
 import com.hotel.service.HotelService;
 import com.hotel.service.ReviewService;
@@ -52,19 +55,22 @@ public class AdminController {
     private final UserService userService;
     private final HotelOwnerService hotelOwnerService;
     private final ReviewService reviewService;
+    private final DestinationService destinationService;
 
     public AdminController(HotelService hotelService, 
                            RoomService roomService, 
                            BookingService bookingService,
                            UserService userService,
                            HotelOwnerService hotelOwnerService,
-                           ReviewService reviewService) {
+                           ReviewService reviewService,
+                           DestinationService destinationService) {
         this.hotelService = hotelService;
         this.roomService = roomService;
         this.bookingService = bookingService;
         this.userService = userService;
         this.hotelOwnerService = hotelOwnerService;
         this.reviewService = reviewService;
+        this.destinationService = destinationService;
     }
 
     // ==================== Dashboard Stats ====================
@@ -509,5 +515,94 @@ public class AdminController {
         String message = Boolean.TRUE.equals(request.getApproved()) ?
                 "Hotel approved successfully" : "Hotel rejected";
         return ResponseEntity.ok(ApiResponse.success(message, hotel));
+    }
+
+    // ==================== Destination Management ====================
+
+    /**
+     * Get all destinations (including inactive).
+     */
+    @GetMapping("/destinations")
+    @Operation(summary = "Get all destinations", description = "Retrieve all destinations for admin management")
+    public ResponseEntity<ApiResponse<List<DestinationDto>>> getAllDestinations() {
+        List<DestinationDto> destinations = destinationService.getAllDestinations();
+        return ResponseEntity.ok(ApiResponse.success(destinations));
+    }
+
+    /**
+     * Get destination by ID.
+     */
+    @GetMapping("/destinations/{id}")
+    @Operation(summary = "Get destination by ID", description = "Retrieve destination details by ID")
+    public ResponseEntity<ApiResponse<DestinationDto>> getDestinationById(@PathVariable Long id) {
+        DestinationDto destination = destinationService.getDestinationById(id);
+        return ResponseEntity.ok(ApiResponse.success(destination));
+    }
+
+    /**
+     * Create a new destination.
+     */
+    @PostMapping("/destinations")
+    @Operation(summary = "Create destination", description = "Create a new destination")
+    public ResponseEntity<ApiResponse<DestinationDto>> createDestination(
+            @Valid @RequestBody CreateDestinationRequest request) {
+        DestinationDto destination = destinationService.createDestination(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Destination created successfully", destination));
+    }
+
+    /**
+     * Update an existing destination by ID.
+     */
+    @PutMapping("/destinations/{id}")
+    @Operation(summary = "Update destination", description = "Update an existing destination by ID")
+    public ResponseEntity<ApiResponse<DestinationDto>> updateDestination(
+            @PathVariable Long id,
+            @Valid @RequestBody CreateDestinationRequest request) {
+        DestinationDto destination = destinationService.updateDestination(id, request);
+        return ResponseEntity.ok(ApiResponse.success("Destination updated successfully", destination));
+    }
+
+    /**
+     * Update destination by city name.
+     */
+    @PutMapping("/destinations/city/{city}")
+    @Operation(summary = "Update destination by city", description = "Update an existing destination by city name")
+    public ResponseEntity<ApiResponse<DestinationDto>> updateDestinationByCity(
+            @PathVariable String city,
+            @Valid @RequestBody CreateDestinationRequest request) {
+        DestinationDto destination = destinationService.updateDestinationByCity(city, request);
+        return ResponseEntity.ok(ApiResponse.success("Destination updated successfully", destination));
+    }
+
+    /**
+     * Delete destination by ID.
+     */
+    @DeleteMapping("/destinations/{id}")
+    @Operation(summary = "Delete destination", description = "Delete a destination by ID")
+    public ResponseEntity<ApiResponse<Void>> deleteDestination(@PathVariable Long id) {
+        destinationService.deleteDestination(id);
+        return ResponseEntity.ok(ApiResponse.success("Destination deleted successfully", null));
+    }
+
+    /**
+     * Delete destination by city name.
+     */
+    @DeleteMapping("/destinations/city/{city}")
+    @Operation(summary = "Delete destination by city", description = "Delete a destination by city name")
+    public ResponseEntity<ApiResponse<Void>> deleteDestinationByCity(@PathVariable String city) {
+        destinationService.deleteDestinationByCity(city);
+        return ResponseEntity.ok(ApiResponse.success("Destination deleted successfully", null));
+    }
+
+    /**
+     * Seed default destinations (if none exist).
+     */
+    @PostMapping("/destinations/seed")
+    @Operation(summary = "Seed destinations", description = "Seed default destinations if database is empty")
+    public ResponseEntity<ApiResponse<List<DestinationDto>>> seedDestinations() {
+        destinationService.seedDefaultDestinations();
+        List<DestinationDto> destinations = destinationService.getAllDestinations();
+        return ResponseEntity.ok(ApiResponse.success("Destinations seeded successfully", destinations));
     }
 }
