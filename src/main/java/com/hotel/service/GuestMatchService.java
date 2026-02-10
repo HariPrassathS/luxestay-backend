@@ -11,6 +11,7 @@ import com.hotel.repository.HotelRepository;
 import com.hotel.repository.RoomRepository;
 import com.hotel.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * No fake or misleading recommendations
  */
 @Service
+@Transactional(readOnly = true)
 public class GuestMatchService {
     
     private final UserRepository userRepository;

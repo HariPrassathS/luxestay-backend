@@ -2,6 +2,7 @@ package com.hotel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @SpringBootApplication
 @EnableAsync
+@ComponentScan(basePackages = {"com.hotel", "com.luxestay"})
 public class HotelReservationApplication {
 
     public static void main(String[] args) {

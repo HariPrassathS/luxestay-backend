@@ -19,7 +19,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/memory-lane")
-@CrossOrigin(origins = "*")
 public class MemoryLaneController {
     
     @Autowired

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/guest-match")
-@CrossOrigin(origins = "*")
+
 public class GuestMatchController {
     
     private final GuestMatchService guestMatchService;

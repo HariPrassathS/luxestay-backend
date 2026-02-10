@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/price-genius")
-@CrossOrigin(origins = "*")
 public class PriceGeniusController {
     
     private final PriceGeniusService priceGeniusService;
