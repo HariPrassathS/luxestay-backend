@@ -1,12 +1,10 @@
 package com.hotel.controller;
 
 import com.hotel.domain.dto.common.ApiResponse;
-import com.hotel.domain.dto.destination.CreateDestinationRequest;
 import com.hotel.domain.dto.destination.DestinationDto;
 import com.hotel.service.DestinationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

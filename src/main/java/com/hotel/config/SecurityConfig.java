@@ -93,6 +93,32 @@ public class SecurityConfig {
                         // Reviews public endpoints - hotel reviews and stats
                         .requestMatchers(HttpMethod.GET, "/api/reviews/hotels/**").permitAll()
                         
+                        // Trust Score endpoints - public access for trust metrics
+                        .requestMatchers(HttpMethod.GET, "/api/trust/**").permitAll()
+                        
+                        // FlexBook/Cancellation Policy endpoints - public access
+                        .requestMatchers(HttpMethod.GET, "/api/policies/**").permitAll()
+                        
+                        // Live Pulse endpoints - public access for activity metrics
+                        .requestMatchers(HttpMethod.GET, "/api/pulse/**").permitAll()
+                        
+                        // Smart Alerts endpoints - session-based alerts are public
+                        .requestMatchers(HttpMethod.GET, "/api/alerts/session").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/alerts/availability").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/alerts/price-drop/**").permitAll()
+                        
+                        // Price Genius endpoints - public access for price insights
+                        .requestMatchers(HttpMethod.GET, "/api/price-genius/**").permitAll()
+                        
+                        // Stay Countdown endpoints - booking countdown is public for confirmation pages
+                        .requestMatchers(HttpMethod.GET, "/api/countdown/booking/**").permitAll()
+                        
+                        // Guest Match endpoints - popular recommendations are public
+                        .requestMatchers(HttpMethod.GET, "/api/guest-match/popular").permitAll()
+                        
+                        // VIP Concierge endpoints - benefits overview is public
+                        .requestMatchers(HttpMethod.GET, "/api/vip/benefits").permitAll()
+                        
                         // Swagger/OpenAPI
                         .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                         

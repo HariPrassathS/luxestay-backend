@@ -363,7 +363,7 @@ public class BookingService {
                 loyaltyService.processBookingXp(savedBooking);
             } catch (Exception e) {
                 // Log error but don't fail the status update
-                System.err.println("Failed to process loyalty XP for booking " + id + ": " + e.getMessage());
+                log.error("Failed to process loyalty XP for booking {}: {}", id, e.getMessage());
             }
         }
         
