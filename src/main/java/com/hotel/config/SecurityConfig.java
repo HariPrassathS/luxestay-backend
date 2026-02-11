@@ -73,6 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/hotels/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/rooms/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/destinations/**").permitAll()
                         
                         // Hotel registration - public access for prospective owners
                         .requestMatchers("/api/register-hotel/**").permitAll()
